@@ -1,38 +1,49 @@
 package com.heb.design_pattern_practice
 
-interface PrinterMachine {
+interface IPrinterMachine {
 
     fun printDocument(document: String)
 }
 
-class BasePrinterMachine : PrinterMachine {
+class BasePrinterMachine : IPrinterMachine {
     override fun printDocument(document: String) {
-        println("Printing black and white document -> $document")
+        println("Base printing document -> $document")
     }
 }
 
-class UpgradedPrinterMachine(private val printer: PrinterMachine) : PrinterMachine {
-    override fun printDocument(document: String) {
-        printer.printDocument(document)
-    }
+class UpgradedPrinterMachine(private val printer: IPrinterMachine) : IPrinterMachine {
 
-    fun printColorCopy(document: String) {
-        println("Upgraded printer is printing a colored version in addition -> $document")
+    override fun printDocument(document: String) {
+        println("Document received for printing")
+        printer.printDocument(document)
+        println("Sending the document to default email")
     }
 }
 
 class Document {
 
-    private val _contents: String = "Document contents"
-    private val _basePrinter = BasePrinterMachine()
-    private val _upgradedPrinter = UpgradedPrinterMachine(_basePrinter)
+    private val contents: String = "Document contents"
+    private val basePrinter = BasePrinterMachine()
+    private val upgradedPrinter = UpgradedPrinterMachine(basePrinter)
 
     fun submitForRegularPrinting() {
-        _basePrinter.printDocument(_contents)
+        basePrinter.printDocument(contents)
     }
 
     fun submitForEnhancedPrinting() {
-        _upgradedPrinter.printDocument(_contents)
-        _upgradedPrinter.printColorCopy(_contents)
+        upgradedPrinter.printDocument(contents)
     }
+}
+
+fun main() {
+    val document = Document()
+
+    document.submitForRegularPrinting()
+    document.submitForEnhancedPrinting()
+
+    //result:
+    //Base printing document -> Document contents
+    //Document received for printing
+    //Base printing document -> Document contents
+    //Sending the document to default email
 }

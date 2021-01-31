@@ -19,12 +19,9 @@ class RemoveFromOrderCommand(private val product: String) : OrderCommand {
 class CommandProcessor {
     private val queue = ArrayList<OrderCommand>()
 
-    fun enqueueCommand(command: OrderCommand) {
+    fun enqueueCommand(command: OrderCommand): CommandProcessor {
         queue.add(command)
-    }
-
-    fun bulkEnqueue(commands: List<OrderCommand>) {
-        queue.addAll(commands)
+        return this
     }
 
     fun processCommands(): CommandProcessor {
@@ -36,23 +33,17 @@ class CommandProcessor {
     }
 }
 
-class OrderHandler {
+fun main() {
+    CommandProcessor()
+        .enqueueCommand(AddToOrderCommand("Bread"))
+        .enqueueCommand(AddToOrderCommand("Onions"))
+        .enqueueCommand(AddToOrderCommand("Coke"))
+        .enqueueCommand(RemoveFromOrderCommand("Coke"))
+        .processCommands()
 
-    private val _commandProcessor = CommandProcessor()
-
-    fun addToOrder(product: String) {
-        _commandProcessor.enqueueCommand(AddToOrderCommand(product))
-    }
-
-    fun removeFromOrder(product: String) {
-        _commandProcessor.enqueueCommand(RemoveFromOrderCommand(product))
-    }
-
-    fun bulkAdd(commands: List<OrderCommand>) {
-        _commandProcessor.bulkEnqueue(commands)
-    }
-
-    fun finalizeOrder() {
-        _commandProcessor.processCommands()
-    }
+    //result
+    //Added Bread
+    //Added Onions
+    //Added Coke
+    //Removing Coke
 }

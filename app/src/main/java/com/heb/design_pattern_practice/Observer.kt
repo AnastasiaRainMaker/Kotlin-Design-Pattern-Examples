@@ -23,9 +23,19 @@ class UserName(observer: TextChangeObserver, initValue: String = "No name record
 
 class Profile {
 
-    private val _userName = UserName(NameChangeObserver())
+    private val userName = UserName(NameChangeObserver())
 
     fun assignNewName(newName: String) {
-        _userName.name = newName
+        userName.name = newName
     }
+}
+
+fun main() {
+    val profile = Profile()
+    profile.assignNewName("Mary")
+    profile.assignNewName("Alison")
+
+    //result
+    //Name changed from No name recorded to Mary
+    //Name changed from Mary to Alison
 }

@@ -26,17 +26,27 @@ class SizeTransformer(private val size: String, val next: ChainTransformation? =
     }
 }
 
-class ShapeDrawer(private val _shape: CustomShape) {
+class ShapeDrawer(private val shape: CustomShape) {
 
-    private val _blueAndBigTransformator by lazy {
+    private val blueAndBigTransformator by lazy {
         ColorTransformer(
             "BLUE",
-            SizeTransformer("BIG")
+            next = SizeTransformer("BIG")
         )
     }
 
     fun makeBlueAndBig() {
-        _blueAndBigTransformator.transform(_shape)
+        blueAndBigTransformator.transform(shape)
     }
+}
+
+fun main() {
+    val shape = CustomShape(color = "YELLOW", size = "SMALL")
+    val shapeDrawer = ShapeDrawer(shape)
+    shapeDrawer.makeBlueAndBig()
+    println(shape)
+
+    //result
+    //CustomShape(color=BLUE, size=BIG)
 }
 

@@ -1,45 +1,59 @@
 package com.heb.design_pattern_practice
 
-interface VisitableReport {
-    fun <R> accept(visitor: ReportVisitor<R>): R
+interface IVisitor {
+    fun visit(machine: IWashingMachine)
 }
 
-class MonthlyReport(val totalSales: Long) : VisitableReport {
-
-    override fun <R> accept(visitor: ReportVisitor<R>): R = visitor.visit(this)
+interface IWashingMachine {
+    fun heatWater(degrees: Int)
+    fun wash(minutes: Int)
+    fun spin(minutes: Int)
 }
 
-class YearlyReport(val totalSales: Long) : VisitableReport {
-
-    override fun <R> accept(visitor: ReportVisitor<R>): R = visitor.visit(this)
+class Shirt : IVisitor {
+    override fun visit(machine: IWashingMachine) {
+        println("Entering shirt washing mode...")
+        machine.heatWater(40)
+        machine.wash(10)
+        machine.spin(5)
+    }
 }
 
-interface ReportVisitor<out R> {
-    fun visit(report: MonthlyReport): R
-    fun visit(report: YearlyReport): R
+class Pillow : IVisitor {
+    override fun visit(machine: IWashingMachine) {
+        println("Entering pillow washing mode...")
+        machine.heatWater(60)
+        machine.wash(20)
+        machine.spin(10)
+    }
 }
 
-class TotalSalesReporter : ReportVisitor<Long> {
-    override fun visit(report: MonthlyReport): Long =
-        report.totalSales / COMPANY_IN_BUSINESS / 12
+class WashingMachine : IWashingMachine {
+    override fun heatWater(degrees: Int) {
+        println("Heating water to $degrees")
+    }
 
-    override fun visit(report: YearlyReport): Long =
-        report.totalSales / COMPANY_IN_BUSINESS
+    override fun wash(minutes: Int) {
+        println("Washing for $minutes minutes")
+    }
 
-}
-
-class CompanyPerformanceAnalyzer {
-
-    private val _totalSales: Long = 100_000
-
-    private val _totalSalesReporter = TotalSalesReporter()
-
-    fun calculateMonthlySales(): Long =
-        MonthlyReport(_totalSales).accept(_totalSalesReporter)
-
-    fun calculateYearlySales(): Long =
-        YearlyReport(_totalSales).accept(_totalSalesReporter)
+    override fun spin(minutes: Int) {
+        println("Spinning for $minutes minutes")
+    }
 
 }
 
-const val COMPANY_IN_BUSINESS = 3
+fun main() {
+    val washingMachine = WashingMachine()
+    Shirt().visit(washingMachine)
+    Pillow().visit(washingMachine)
+    //result
+    //Entering shirt washing mode...
+    //Heating water to 40
+    //Washing for 10 minutes
+    //Spinning for 5 minutes
+    //Entering pillow washing mode...
+    //Heating water to 60
+    //Washing for 20 minutes
+    //Spinning for 10 minutes
+}

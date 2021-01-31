@@ -1,13 +1,13 @@
 package com.heb.design_pattern_practice
 
-class User(private val chatMediator: ChatMediator, val name: String) {
+class User(private val chatMediator: ChatMediator? = null, private val name: String) {
 
     fun send(message: String) {
-        chatMediator.send("Message from $name -> $message", this)
+        chatMediator?.send("Message from $name -> $message", this)
     }
 
     fun receive(message: String) {
-        println("Message received $message")
+        println("$name received $message")
     }
 }
 
@@ -28,20 +28,30 @@ class ChatMediator {
     }
 }
 
-class GroupChat {
-
-    private val _charMediator = ChatMediator()
+class GroupChat(vararg users: User, charMediator: ChatMediator) {
 
     init {
-        _charMediator.addUserToChat(
-            User(_charMediator, "John"),
-            User(_charMediator, "Katy"),
-            User(_charMediator, "Lucy"),
-        )
+        charMediator.addUserToChat(*users)
     }
 
     fun sendMessageToGroup(user: User) {
         user.send("Hi, there!")
     }
 
+}
+
+fun main() {
+    val charMediator = ChatMediator()
+    val john = User(charMediator, "John")
+    val groupChat = GroupChat(
+        john,
+        User(charMediator, "Katy"),
+        User(charMediator, "Lucy"),
+        charMediator = charMediator
+    )
+    groupChat.sendMessageToGroup(john)
+
+    //result
+    //Katy received Message from John -> Hi, there!
+    //Lucy received Message from John -> Hi, there!
 }

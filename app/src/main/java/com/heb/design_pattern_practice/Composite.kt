@@ -1,24 +1,46 @@
 package com.heb.design_pattern_practice
 
-class Student(private val name: String) {
+interface Book {
+    fun read()
+}
 
-    fun goOnExcursion() {
-        println("$name is going on excursion")
+class Manual : Book {
+
+    override fun read() {
+        println("Reading a manual")
     }
 }
 
-class Class(private val students: List<Student>) {
+class Novel : Book {
 
-    fun takeClassToExcursion() {
-        students.forEach { it.goOnExcursion() }
+    override fun read() {
+        println("Reading a novel")
     }
 }
 
-class Implementation {
+class BookComposite {
 
-    private val _class = Class(listOf(Student("Mary"), Student("Victor")))
+    private val books = arrayListOf<Book>()
 
-    fun organizeExcursionDay() {
-        _class.takeClassToExcursion()
+    fun addBookToRead(book: Book) {
+        books.add(book)
     }
+
+    fun readAllBooks() {
+        books.forEach { it.read() }
+    }
+}
+
+fun main() {
+    val bookComposite = BookComposite()
+    bookComposite.addBookToRead(Manual())
+    bookComposite.addBookToRead(Novel())
+    bookComposite.addBookToRead(Novel())
+
+    bookComposite.readAllBooks()
+
+    //result
+    //Reading a manual
+    //Reading a novel
+    //Reading a novel
 }

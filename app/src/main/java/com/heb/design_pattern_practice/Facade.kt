@@ -1,36 +1,63 @@
 package com.heb.design_pattern_practice
 
-class CartManager {
+class CarPlantFacade {
 
-    private val cartMap = mutableMapOf<String, Int>()
+    fun orderCar(): Car =
+        Car(
+            wheels = WheelSupplier().provideWheels(),
+            parts = PartSupplier().provideParts()
+        ).apply { PaintingFacility().paintCar() }
+}
 
-    fun addToCart(item: String) {
-        if (cartMap.containsKey(item)) {
-            cartMap[item] = cartMap[item]?.plus(1) ?: 1
-        } else cartMap[item] = 1
-    }
+data class Car(
+    val wheels: ArrayList<WheelSupplier.Wheel>,
+    val parts: ArrayList<PartSupplier.CarPart>
+)
 
-    fun getQuantity(item: String): Int? = cartMap[item]
+class WheelSupplier {
 
-    fun bulkAdd(items: ArrayList<String>) {
-        items.forEach {
-            addToCart(
-                it
-            )
-        }
+    class Wheel
+
+    fun provideWheels(): ArrayList<Wheel> {
+        println("Ordering wheels")
+        return arrayListOf(Wheel(), Wheel(), Wheel(), Wheel())
     }
 }
 
-class ClassRepository(private val cartManager: CartManager) {
+class PaintingFacility {
 
-    fun addToCart(item: String) {
-        cartManager.addToCart(item)
-    }
-
-    fun getQuantity(item: String) = cartManager.getQuantity(item)
-
-
-    fun bulkAdd(items: ArrayList<String>) {
-        cartManager.bulkAdd(items)
+    fun paintCar() {
+        println("Painting the car")
     }
 }
+
+class PartSupplier {
+
+    open class CarPart
+    class Engine : CarPart()
+    class Breaks : CarPart()
+    class Headlights : CarPart()
+
+    fun provideParts(): ArrayList<CarPart> {
+        println("Ordering car parts")
+        return arrayListOf(
+            Engine(),
+            Breaks(),
+            Headlights()
+        )
+    }
+}
+
+fun main() {
+    CarPlantFacade().orderCar()
+    println("The car was delivered")
+
+    //result
+    //Ordering wheels
+    //Ordering car parts
+    //Painting the car
+    //The car was delivered
+}
+
+
+

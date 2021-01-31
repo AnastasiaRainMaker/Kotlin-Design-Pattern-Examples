@@ -12,6 +12,9 @@ class Vacation(builder: VacationBuilder) {
         cuisine = builder.cuisine
     }
 
+    override fun toString(): String =
+        "hotel is $hotel, excursions are ${excursions.joinToString(",")}, cuisine types are ${cuisine.joinToString(",")}"
+
     class VacationBuilder {
 
         var hotel: String = ""
@@ -37,11 +40,16 @@ class Vacation(builder: VacationBuilder) {
     }
 }
 
-class VacationProvider {
+fun main() {
 
-    fun provideVacation() = Vacation.VacationBuilder()
-        .hotel("La Quinta")
-        .excursions(arrayListOf("Tropical"))
-        .cuisine(arrayListOf("Mexican", "Italian"))
-        .build()
+    println(
+        Vacation.VacationBuilder()
+            .hotel("La Quinta")
+            .excursions(arrayListOf("Tropical"))
+            .cuisine(arrayListOf("Mexican", "Italian"))
+            .build()
+            .toString()
+    )
+    // result is
+    // hotel is La Quinta, excursions are Tropical, cuisine types are Mexican,Italian
 }
